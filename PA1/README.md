@@ -54,3 +54,10 @@ OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) web
 ```bash
 /usr/NX/scripts/vgl/vglrun ./Tutorial
 ```
+
+## Instructions for graders
+Use this line in the terminal to run the program
+```bash
+./Tutorial shader-v.txt shader-f.txt
+```
+The Shaders are in the Assets folder.

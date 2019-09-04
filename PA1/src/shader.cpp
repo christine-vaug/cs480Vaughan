@@ -1,3 +1,6 @@
+#include <fstream>
+#include <string>
+
 #include "shader.h"
 
 Shader::Shader()
@@ -33,44 +36,33 @@ bool Shader::Initialize()
 }
 
 // Use this method to add shaders to the program. When finished - call finalize()
-bool Shader::AddShader(GLenum ShaderType)
+bool Shader::AddShader(GLenum ShaderType, int argc, char **argv)
 {
   std::string s;
 
   if(ShaderType == GL_VERTEX_SHADER)
   {
-    s = "#version 330\n \
-          \
-          layout (location = 0) in vec3 v_position; \
-          layout (location = 1) in vec3 v_color; \
-          \
-          smooth out vec3 color; \
-          \
-          uniform mat4 projectionMatrix; \
-          uniform mat4 viewMatrix; \
-          uniform mat4 modelMatrix; \
-          \
-          void main(void) \
-          { \
-            vec4 v = vec4(v_position, 1.0); \
-            gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * v; \
-            color = v_color; \
-          } \
-          ";
+		std::string fileName(argv[1]);
+		std::ifstream shaderFile ("../Assets/Shaders/" + fileName);
+		if (!shaderFile) 
+			std::cerr << "There was a problem with the vertex shader file." << std::endl;
+		else
+		{
+			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
+			shaderFile.close();
+		}
   }
   else if(ShaderType == GL_FRAGMENT_SHADER)
   {
-    s = "#version 330\n \
-          \
-          smooth in vec3 color; \
-          \
-          out vec4 frag_color; \
-          \
-          void main(void) \
-          { \
-             frag_color = vec4(color.rgb, 1.0); \
-          } \
-          ";
+		std::string fileName(argv[2]);
+		std::ifstream shaderFile ("../Assets/Shaders/" + fileName);
+		if (!shaderFile) 
+			std::cerr << "There was a problem with the fragment shader file." << std::endl;
+		else
+		{
+			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
+			shaderFile.close();
+		}
   }
 
   GLuint ShaderObj = glCreateShader(ShaderType);
