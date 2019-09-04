@@ -1,6 +1,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <iostream>
 using namespace std;
 

@@ -1,6 +1,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <sys/time.h>
 #include <assert.h>
 
