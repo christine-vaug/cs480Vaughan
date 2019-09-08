@@ -13,13 +13,14 @@ This is a simple colored triangle on the screen. To run this project ```cd PA0``
 This is a cube that rotates in place on the screen. To run this project ```cd PA1``` then follow the instructions in the README.md.
 
          __        _
-       _/  \    _(\(o
-      /     \  /  _  ^^^o
-     /   !   \/  ! '!!!v'
-    !  !  \ _' ( \____
+		 _/  \    _(\(o
+	   /     \  /  _  ^^^o
+	  /   !   \/  ! '!!!v'
+	 !  !  \ _' ( \____
     ! . \ _!\   \===^\)
-     \ \_!  / __!
-      \!   /    \
+	\ \_!  / __!
+	 \!   /    \
 (\_      _/   _\ )
  \ ^^--^^ __-^ /(__
-  ^^----^^    "^--v'
+ ^^----^^    "^--v'
+ 

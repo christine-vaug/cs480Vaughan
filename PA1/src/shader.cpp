@@ -42,24 +42,26 @@ bool Shader::AddShader(GLenum ShaderType, int argc, char **argv)
 
   if(ShaderType == GL_VERTEX_SHADER)
   {
-		std::string fileName(argv[1]);
-		std::ifstream shaderFile ("../Assets/Shaders/" + fileName);
-		if (!shaderFile) 
+		std::string fileName(argv[1]); //the vertex shader is the first text file passed in
+		std::ifstream shaderFile ("../Assets/Shaders/" + fileName); //open the file
+		if (!shaderFile) //if unable to open the file, write an error to the terminal
 			std::cerr << "There was a problem with the vertex shader file." << std::endl;
 		else
 		{
+			//assign the text in the file to the string s
 			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
 			shaderFile.close();
 		}
   }
   else if(ShaderType == GL_FRAGMENT_SHADER)
   {
-		std::string fileName(argv[2]);
-		std::ifstream shaderFile ("../Assets/Shaders/" + fileName);
-		if (!shaderFile) 
+		std::string fileName(argv[2]); //the fragment shader is the second text file passed in
+		std::ifstream shaderFile ("../Assets/Shaders/" + fileName); //open the file
+		if (!shaderFile) //if unable to open the file, write an error to the terminal
 			std::cerr << "There was a problem with the fragment shader file." << std::endl;
 		else
 		{
+			//assign the text in the file to the string s
 			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
 			shaderFile.close();
 		}

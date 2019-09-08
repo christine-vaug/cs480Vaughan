@@ -79,12 +79,12 @@ Object::~Object()
 
 void Object::Update(unsigned int dt)
 {
-  angle += dt * M_PI/1000;
-	glm::vec3 rotAxis(0.0f, 1.0f, 0.0f);
-	glm::mat4 rotOrbit = glm::rotate((angle), rotAxis);
-	glm::mat4 transOrbit = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, 0.0f));
-  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0));
-	model = rotOrbit * transOrbit * rotSelf;
+	angle += dt * M_PI/1000;
+	glm::vec3 rotAxis(0.0f, 1.0f, 0.0f); //sets the orbit around the y-axis
+	glm::mat4 rotOrbit = glm::rotate((angle), rotAxis); //starts orbit
+	glm::mat4 transOrbit = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, 0.0f)); //sets orbital radius to 5 units from the center
+	glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0)); //sets the cube's rotation about its center y-axis
+	model = rotOrbit * transOrbit * rotSelf; //multiply matrices to apply effects to the model
 }
 
 glm::mat4 Object::GetModel()
