@@ -83,26 +83,26 @@ void Engine::Keyboard()
   else if (m_event.type == SDL_KEYDOWN)
   {
     // handle key down events here
-	switch( e.key.keysym.sym )
+	switch(m_event.key.keysym.sym)
 	{
 		case SDLK_ESCAPE:
 		m_running = false; //quit the program
 		break;
 
-		case SDLK_UP: //A
-		; //make the object reverse its orbit
+		case SDLK_a: //A
+		m_graphics->m_cube->reversedOrbit = !(m_graphics->m_cube->reversedOrbit); //make the object reverse its orbit
 		break;
 
-		case SDLK_DOWN: //D
-		gCurrentSurface = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ]; //make the object pause/unpause its orbit
+		case SDLK_s: //S
+		m_graphics->m_cube->pausedOrbit = !(m_graphics->m_cube->pausedOrbit); //make the object pause/unpause its orbit
 		break;
 
-		case SDLK_LEFT: //J
-		gCurrentSurface = gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ]; //make object reverse spin
+		case SDLK_j: //J
+		m_graphics->m_cube->reversedSpin = !(m_graphics->m_cube->reversedSpin); //make object reverse spin
 		break;
 
-		case SDLK_RIGHT: //K
-		gCurrentSurface = gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ]; //make object pause/unpause its spin
+		case SDLK_k: //K
+		m_graphics->m_cube->pausedSpin = !(m_graphics->m_cube->pausedSpin); //make object pause/unpause its spin
 		break;
 
 		default:

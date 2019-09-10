@@ -60,7 +60,12 @@ Object::Object()
     Indices[i] = Indices[i] - 1;
   }
 
-  angle = 0.0f;
+  angleOrbit = 0.0f;
+	angleSelf = 0.0f;
+	pausedOrbit = false;
+	pausedSpin = false;
+	reversedOrbit = false;
+	reversedSpin = false;
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -79,8 +84,29 @@ Object::~Object()
 
 void Object::Update(unsigned int dt)
 {
-	angleOrbit += dt * M_PI/1000; //the angle of the object's orbit
-	angleSelf += dt * M_PI/1000; //the angle of the object's rotation about its center y-axis
+	if(!pausedOrbit)
+	{
+		if(reversedOrbit)
+			angleOrbit -= dt * M_PI/1000; //the angle of the object's orbit
+		else
+			angleOrbit += dt * M_PI/1000; //the angle of the object's orbit
+	}
+	if(!pausedSpin)
+	{
+		if(reversedSpin)
+			angleSelf -= 3 * dt * M_PI/1000; //the angle of the object's orbit
+		else
+		{
+			if(reversedOrbit)
+				angleSelf += 3 * dt * M_PI/1000; //the angle of the object's orbit
+			else
+				angleSelf += dt * M_PI/1000; //the angle of the object's orbit
+		}
+	}
+	else
+	{
+		angleSelf -= dt * M_PI/1000; //the angle of the object's orbit
+	}
 	glm::vec3 rotAxis(0.0f, 1.0f, 0.0f); //sets the orbit around the y-axis
 	glm::mat4 rotOrbit = glm::rotate((angleOrbit), rotAxis); //starts orbit
 	glm::mat4 transOrbit = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, 0.0f)); //sets orbital radius to 5 units from the center

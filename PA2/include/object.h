@@ -13,6 +13,10 @@ class Object
     void Render();
 
     glm::mat4 GetModel();
+	bool pausedOrbit;
+	bool pausedSpin;
+	bool reversedOrbit;
+	bool reversedSpin;
 
   private:
     glm::mat4 model;
@@ -21,7 +25,8 @@ class Object
     GLuint VB;
     GLuint IB;
 
-    float angle;
+    float angleOrbit; //the angle of the orbit
+	float angleSelf; //the anlgle of the self rotation
 };
 
 #endif /* OBJECT_H */
