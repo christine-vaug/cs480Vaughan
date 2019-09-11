@@ -109,6 +109,23 @@ void Engine::Keyboard()
 		break;
 	}
   }
+  else if (m_event.type == SDL_MOUSEBUTTONDOWN)
+  {
+    // handle key down events here
+	switch(m_event.button.button)
+	{
+		case SDL_BUTTON_LEFT: //left mouse button
+		m_graphics->m_cube->reversedOrbit = !(m_graphics->m_cube->reversedOrbit); //make the object reverse its orbit
+		break;
+
+		case SDL_BUTTON_RIGHT: //right mouse button
+		m_graphics->m_cube->pausedOrbit = !(m_graphics->m_cube->pausedOrbit); //make the object pause/unpause its orbit
+		break;
+
+		default:
+		break;
+	}
+  }
 }
 
 unsigned int Engine::getDT()
