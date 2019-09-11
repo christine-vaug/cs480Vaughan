@@ -21,7 +21,7 @@ Use this line in the terminal to run the program:
 The Shaders are in the Assets folder.
 
 ### Keyboard/Mouse Instructions
-Reverse orbit - A or Left Mouse Button
+Reverse orbit - A or Left Mouse Button\n
 Pause/Unpause orbit - S or Right Mouse Button
 Reverse spin - J
 Pause/Unpause spin - K
