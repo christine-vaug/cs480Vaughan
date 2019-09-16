@@ -111,8 +111,8 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  planet->Update(dt, glm::mat4(1.0f));
   moon->Update(dt, planet->GetModel());
+  planet->Update(dt, glm::mat4(1.0f));
 }
 
 void Graphics::Render()

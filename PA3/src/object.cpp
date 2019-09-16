@@ -63,10 +63,20 @@ Object::Object(bool moon)
   isMoon = moon;
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
+
   pausedOrbit = false;
   pausedSpin = false;
   reversedOrbit = false;
   reversedSpin = false;
+
+  scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
+  maxScale = 3.0f;
+  minScale = 0.25f;
+
+  orbitSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
+  spinSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
+  maxSpeed = 3.0f;
+  minSpeed = 0.25f;
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -85,31 +95,31 @@ Object::~Object()
 
 void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
 {
-	if(!pausedOrbit)
-	{
-		if(reversedOrbit)
-			angleOrbit -= dt * M_PI/1000; //the angle of the object's orbit
-		else
-			angleOrbit += dt * M_PI/1000; //the angle of the object's orbit
-	}
-	if(!pausedSpin)
-	{
-		if(reversedSpin)
-			angleSelf -= dt * M_PI/1000; //the angle of the object's orbit
-		else
-			angleSelf += dt * M_PI/1000; //the angle of the object's orbit
-	}
+  if(!pausedOrbit)
+  {
+    if(reversedOrbit)
+      angleOrbit -= dt * M_PI/(2000 / orbitSpeedMult); //the angle of the object's orbit
+    else
+      angleOrbit += dt * M_PI/(2000 / orbitSpeedMult); //the angle of the object's orbit
+  }
+  if(!pausedSpin)
+  {
+    if(reversedSpin)
+      angleSelf -= dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
+    else
+      angleSelf += dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
+  }
 
-    glm::vec3 orbitAxis (0.0f, 1.0f, 0.0f); //sets axis around which the object orbits
-	glm::mat4 rotOrbit = glm::rotate(orbitOrigin, (angleOrbit), orbitAxis); //starts orbit
-	glm::mat4 transOrbit = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, 0.0f)); //sets orbital radius to 5 units from the center
-	glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the cube's rotation about its center y-axis
-    glm::mat4 scaleMat;
-	if(isMoon)
-      scaleMat = glm::scale(glm::vec3(0.5f, 0.5f, 0.5f));
-	else
-      scaleMat = glm::scale(glm::vec3(1.0f, 1.0f, 1.0f));
-	model = rotOrbit * transOrbit * scaleMat * rotSelf; //multiply matrices to apply effects to the model
+  glm::vec3 orbitAxis (0.0f, 1.0f, 0.0f); //sets axis around which the object orbits
+  glm::mat4 rotOrbit = glm::rotate(orbitOrigin, (angleOrbit), orbitAxis); //starts orbit
+  glm::mat4 transOrbit = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, 0.0f)); //sets orbital radius to 5 units from the center
+  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the cube's rotation about its center y-axis
+  glm::mat4 scaleMat;
+  if(isMoon) //make the moon smaller than the planet
+      scaleMat = glm::scale(glm::vec3((scaleMult * 0.5f), (scaleMult * 0.5f), (scaleMult * 0.5f)));
+  else
+      scaleMat = glm::scale(glm::vec3(scaleMult, scaleMult, scaleMult));
+  model = rotOrbit * transOrbit * scaleMat * rotSelf; //multiply matrices to apply effects to the model
 }
 
 glm::mat4 Object::GetModel()
@@ -134,3 +144,56 @@ void Object::Render()
   glDisableVertexAttribArray(1);
 }
 
+void Object::SetScale(bool scalar)
+{
+  if(scalar) //if increasing
+  {
+    if(scaleMult + 0.25f > maxScale) //be sure not to go over the max limit
+      scaleMult = maxScale;
+    else
+      scaleMult += 0.25f;
+  }
+  else //if decreasing
+  {
+    if(scaleMult - 0.25f < minScale) //be sure not to go under the min limit
+      scaleMult = minScale;
+    else
+      scaleMult -= 0.25f;
+  }
+}
+
+void Object::SetOrbitSpeed(bool scalar)
+{
+  if(scalar) //if increasing
+  {
+    if(orbitSpeedMult + 0.25f > maxSpeed) //be sure not to go over the max limit
+      orbitSpeedMult = maxSpeed;
+    else
+      orbitSpeedMult += 0.25f;
+  }
+  else //if decreasing
+  {
+    if(orbitSpeedMult - 0.25f < minSpeed) //be sure not to go under the min limit
+      orbitSpeedMult = minSpeed;
+    else
+      orbitSpeedMult -= 0.25f;
+  }
+}
+
+void Object::SetSpinSpeed(bool scalar)
+{
+  if(scalar) //if increasing
+  {
+    if(spinSpeedMult + 0.25f > maxSpeed) //be sure not to go over the max limit
+      spinSpeedMult = maxSpeed;
+    else
+      spinSpeedMult += 0.25f;
+  }
+  else //if decreasing
+  {
+    if(spinSpeedMult - 0.25f < minSpeed) //be sure not to go under the min limit
+      spinSpeedMult = minSpeed;
+    else
+      spinSpeedMult -= 0.25f;
+  }
+}

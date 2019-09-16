@@ -89,20 +89,86 @@ void Engine::Keyboard()
 		m_running = false; //quit the program
 		break;
 
-		case SDLK_a: //A
+		//planet controls
+		case SDLK_q:
 		m_graphics->planet->reversedOrbit = !(m_graphics->planet->reversedOrbit); //make the planet reverse its orbit
 		break;
 
-		case SDLK_s: //S
+		case SDLK_e:
 		m_graphics->planet->pausedOrbit = !(m_graphics->planet->pausedOrbit); //make the planet pause/unpause its orbit
 		break;
 
-		case SDLK_j: //J
+		case SDLK_z:
 		m_graphics->planet->reversedSpin = !(m_graphics->planet->reversedSpin); //make planet reverse spin
 		break;
 
-		case SDLK_k: //K
+		case SDLK_c:
 		m_graphics->planet->pausedSpin = !(m_graphics->planet->pausedSpin); //make planet pause/unpause its spin
+		break;
+
+		case SDLK_w:
+		m_graphics->planet->SetScale(true); //increase scale of planet
+		break;
+
+		case SDLK_s:
+		m_graphics->planet->SetScale(false); //decrease scale of planet
+		break;
+
+		case SDLK_d:
+		m_graphics->planet->SetOrbitSpeed(true); //increase speed of planet orbit
+		break;
+
+		case SDLK_a:
+		m_graphics->planet->SetOrbitSpeed(false); //decrease speed of planet orbit
+		break;
+
+		case SDLK_r:
+		m_graphics->planet->SetSpinSpeed(true); //increase speed of planet spin
+		break;
+
+		case SDLK_t:
+		m_graphics->planet->SetSpinSpeed(false); //decrease speed of planet spin
+		break;
+
+		//moon controls
+		case SDLK_i:
+		m_graphics->moon->reversedOrbit = !(m_graphics->moon->reversedOrbit); //make the moon reverse its orbit
+		break;
+
+		case SDLK_p:
+		m_graphics->moon->pausedOrbit = !(m_graphics->moon->pausedOrbit); //make the moon pause/unpause its orbit
+		break;
+
+		case SDLK_n:
+		m_graphics->moon->reversedSpin = !(m_graphics->moon->reversedSpin); //make moon reverse spin
+		break;
+
+		case SDLK_m:
+		m_graphics->moon->pausedSpin = !(m_graphics->moon->pausedSpin); //make moon pause/unpause its spin
+		break;
+
+		case SDLK_o:
+		m_graphics->moon->SetScale(true); //increase scale of moon
+		break;
+
+		case SDLK_l:
+		m_graphics->moon->SetScale(false); //decrease scale of moon
+		break;
+
+		case SDLK_SEMICOLON:
+		m_graphics->moon->SetOrbitSpeed(true); //increase speed of moon orbit
+		break;
+
+		case SDLK_k:
+		m_graphics->moon->SetOrbitSpeed(false); //decrease speed of moon orbit
+		break;
+
+		case SDLK_y:
+		m_graphics->moon->SetSpinSpeed(true); //increase speed of moon spin
+		break;
+
+		case SDLK_u:
+		m_graphics->moon->SetSpinSpeed(false); //decrease speed of moon spin
 		break;
 
 		default:
@@ -115,7 +181,7 @@ void Engine::Keyboard()
 	switch(m_event.button.button)
 	{
 		case SDL_BUTTON_LEFT: //left mouse button
-		m_graphics->moon->reversedOrbit = !(m_graphics->moon->reversedOrbit); //make the moon reverse its orbit
+		m_graphics->planet->pausedOrbit = !(m_graphics->planet->pausedOrbit); //make the planet pause/unpause its orbit
 		break;
 
 		case SDL_BUTTON_RIGHT: //right mouse button
