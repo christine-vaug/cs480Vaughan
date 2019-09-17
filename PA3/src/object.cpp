@@ -105,9 +105,14 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   if(!pausedSpin)
   {
     if(reversedSpin)
-      angleSelf -= dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
+      angleSelf -= 2.3 * dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
     else
-      angleSelf += dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
+    {
+      if(reversedOrbit)
+        angleSelf += 2.3 * dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
+      else
+        angleSelf += dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
+    }
   }
 
   glm::vec3 orbitAxis (0.0f, 1.0f, 0.0f); //sets axis around which the object orbits
