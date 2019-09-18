@@ -45,8 +45,8 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Create the objects
-  planet = new Object(false);
-  moon = new Object(true);
+  planet = new Object(false, 1.0f, 2000.0f, 1500.0f);
+  moon = new Object(true, 0.5f, 1000.0f, 700.0f);
 
   // Set up the shaders
   m_shader = new Shader();
@@ -111,8 +111,8 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  moon->Update(dt, planet->GetModel());
   planet->Update(dt, glm::mat4(1.0f));
+  moon->Update(dt, planet->GetPosition());
 }
 
 void Graphics::Render()

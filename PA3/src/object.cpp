@@ -1,6 +1,6 @@
 #include "object.h"
 
-Object::Object(bool moon)
+Object::Object(bool moon, float baseSc, float baseOS, float baseSS)
 {  
   /*
     # Blender File for a Cube
@@ -68,11 +68,15 @@ Object::Object(bool moon)
   pausedSpin = false;
   reversedOrbit = false;
   reversedSpin = false;
+  position = glm::mat4(1.0f);
 
+  baseScale = baseSc;
   scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
   maxScale = 3.0f;
   minScale = 0.25f;
 
+  baseOrbitSpeed = baseOS;
+  baseSpinSpeed = baseSS;
   orbitSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
   spinSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
   maxSpeed = 3.0f;
@@ -98,38 +102,33 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   if(!pausedOrbit)
   {
     if(reversedOrbit)
-      angleOrbit -= dt * M_PI/(2000 / orbitSpeedMult); //the angle of the object's orbit
+      angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
     else
-      angleOrbit += dt * M_PI/(2000 / orbitSpeedMult); //the angle of the object's orbit
+      angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
   }
   if(!pausedSpin)
   {
     if(reversedSpin)
-      angleSelf -= 2.3 * dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
+      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
     else
-    {
-      if(reversedOrbit)
-        angleSelf += 2.3 * dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
-      else
-        angleSelf += dt * M_PI/(1000 / spinSpeedMult); //the angle of the object's orbit
-    }
+      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
   }
 
-  glm::vec3 orbitAxis (0.0f, 1.0f, 0.0f); //sets axis around which the object orbits
-  glm::mat4 rotOrbit = glm::rotate(orbitOrigin, (angleOrbit), orbitAxis); //starts orbit
-  glm::mat4 transOrbit = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, 0.0f)); //sets orbital radius to 5 units from the center
+  position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates cube about the designated orbitOrigin
   glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the cube's rotation about its center y-axis
-  glm::mat4 scaleMat;
-  if(isMoon) //make the moon smaller than the planet
-      scaleMat = glm::scale(glm::vec3((scaleMult * 0.5f), (scaleMult * 0.5f), (scaleMult * 0.5f)));
-  else
-      scaleMat = glm::scale(glm::vec3(scaleMult, scaleMult, scaleMult));
-  model = rotOrbit * transOrbit * scaleMat * rotSelf; //multiply matrices to apply effects to the model
+  glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
+
+  model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
 }
 
 glm::mat4 Object::GetModel()
 {
   return model;
+}
+
+glm::mat4 Object::GetPosition()
+{
+  return position;
 }
 
 void Object::Render()

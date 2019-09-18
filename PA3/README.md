@@ -18,7 +18,6 @@ Use this line in the terminal to run the program:
 ```bash
 ./PA3 -v shader-v.txt -f shader-f.txt
 ```
-The Shaders are in the Assets folder.
 
 ### Keyboard/Mouse Instructions
 Reverse orbit - A or Left Mouse Button<br/>
