@@ -11,7 +11,6 @@ mkdir build
 cd build
 cp ../makefile .
 make
-./Tutorial
 ```
 
 ## Command Line Instructions
