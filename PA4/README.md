@@ -15,7 +15,7 @@ make
 ## Command Line Instructions
 Use this line in the terminal to run the program:
 ```bash
-./PA4 -v shader-v.txt -f shader-f.txt
+./PA4 -v shader-v.txt -f shader-f.txt -o PA4Box.obj
 ```
 
 ## Keyboard/Mouse Instructions

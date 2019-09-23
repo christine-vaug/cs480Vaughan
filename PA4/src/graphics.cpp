@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 
 #include "graphics.h"
 
@@ -46,15 +47,20 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
     return false;
   }
 
+  //get path name for object file
   int i = 0;
   while(!(strcmp(argv[i], "-o") == 0)) //go through arguments until you find -o flag
 		i++;
 	i++; //next argument is the file name we want
-	std::string fileName(argv[i]);
+	std::string file(argv[i]);
+  file.insert(0, "../Assets/Objects/");
+  char path[file.size() + 1];
+  strcpy(path, file.c_str());
+  std::cout<<path<<std::endl;
 
   // Create the objects
-  planet = new Object(fileName, false, 1.0f, 2000.0f, 1500.0f);
-  //moon = new Object(true, 0.5f, 1000.0f, 700.0f);
+  planet = new Object(path, 1.0f, 2000.0f, 1500.0f);
+  //moon = new Object(path, 0.5f, 1000.0f, 700.0f);
 
   // Set up the shaders
   m_shader = new Shader();

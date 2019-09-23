@@ -2,7 +2,7 @@
 
 #include "object.h"
 
-Object::Object(char* path, bool moon, float baseSc, float baseOS, float baseSS)
+Object::Object(char* path, float baseSc, float baseOS, float baseSS)
 {  
   /*
     # Blender File for a Cube
@@ -62,14 +62,9 @@ Object::Object(char* path, bool moon, float baseSc, float baseOS, float baseSS)
     Indices[i] = Indices[i] - 1;
   }*/
 
-  //vectors and object loader code taken from https://github.com/opengl-tutorials/ogl/blob/master/tutorial07_model_loading/tutorial07.cpp
-  std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals;
-
+  //object loader code taken from https://github.com/opengl-tutorials/ogl/blob/master/tutorial07_model_loading/tutorial07.cpp
   bool res = loadOBJ(path, vertices, uvs, normals);
 
-  isMoon = moon;
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
 
@@ -91,19 +86,29 @@ Object::Object(char* path, bool moon, float baseSc, float baseOS, float baseSS)
   maxSpeed = 3.0f;
   minSpeed = 0.25f;
 
-  glGenBuffers(1, &VB);
+  /*glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);*/
+
+  //code for buffers modified from https://github.com/opengl-tutorials/ogl/blob/master/tutorial07_model_loading/tutorial07.cpp
+	glGenBuffers(1, &VB);
+	glBindBuffer(GL_ARRAY_BUFFER, VB);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &UVB);
+	glBindBuffer(GL_ARRAY_BUFFER, UVB);
+	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 }
 
 Object::~Object()
 {
-  Vertices.clear();
-  Indices.clear();
+  vertices.clear();
+  uvs.clear();
+  normals.clear();
 }
 
 void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
@@ -128,6 +133,7 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
 
   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model*/
+  model = glm::scale(glm::vec3(5.0f, 5.0f, 5.0f));
 }
 
 glm::mat4 Object::GetModel()
@@ -142,7 +148,7 @@ glm::mat4 Object::GetPosition()
 
 void Object::Render()
 {
-  glEnableVertexAttribArray(0);
+  /*glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -154,7 +160,37 @@ void Object::Render()
   glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
   glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(1);*/
+
+  //rendering code taken from https://github.com/opengl-tutorials/ogl/blob/master/tutorial07_model_loading/tutorial07.cpp
+  glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glVertexAttribPointer(
+			0,                  // attribute
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+
+		// 2nd attribute buffer : UVs
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, UVB);
+		glVertexAttribPointer(
+			1,                                // attribute
+			2,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+
+		// Draw the triangle !
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size() );
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 }
 
 void Object::SetScale(bool scalar)
@@ -222,7 +258,7 @@ bool Object::loadOBJ(char* path, std::vector<glm::vec3> & out_vertices,
 
 	FILE * file = fopen(path, "r");
 	if( file == NULL ){
-		printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
+		printf("There was an error opening the object file!\n");
 		getchar();
 		return false;
 	}

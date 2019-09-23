@@ -7,7 +7,7 @@
 class Object
 {
   public:
-    Object(char* path, bool moon, float baseSc, float baseOS, float baseSS);
+    Object(char* path, float baseSc, float baseOS, float baseSS);
     ~Object();
     void Update(unsigned int dt, glm::mat4 orbitOrigin);
     void Render();
@@ -24,24 +24,27 @@ class Object
     bool reversedSpin; //determines if the spin is reversed
 
   private:
-        //object loader code taken from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
+    //object loader code taken from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
     bool loadOBJ(
     char* path, 
     std::vector<glm::vec3> & out_vertices, 
     std::vector<glm::vec2> & out_uvs,
-    std::vector<glm::vec3> & out_normals)
+    std::vector<glm::vec3> & out_normals);
+
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> uvs;
+    std::vector<glm::vec3> normals;
 
     glm::mat4 model;
-    std::vector<Vertex> Vertices;
-    std::vector<unsigned int> Indices;
+    //std::vector<Vertex> Vertices;
+    //std::vector<unsigned int> Indices;
     GLuint VB;
-    GLuint IB;
+    GLuint UVB;
+    //GLuint IB;
 
     float angleOrbit; //the angle of the orbit
     float angleSelf; //the anlgle of the self rotation
     glm::mat4 position; //holds the position of the object
-
-    bool isMoon; //determines if the object is a moon
 
     float baseScale; //the default scale of the object
     float scaleMult; //the multiplier of the object's scale
