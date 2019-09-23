@@ -7,7 +7,7 @@
 class Object
 {
   public:
-    Object(bool moon, float baseSc, float baseOS, float baseSS);
+    Object(char* path, bool moon, float baseSc, float baseOS, float baseSS);
     ~Object();
     void Update(unsigned int dt, glm::mat4 orbitOrigin);
     void Render();
@@ -24,6 +24,13 @@ class Object
     bool reversedSpin; //determines if the spin is reversed
 
   private:
+        //object loader code taken from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
+    bool loadOBJ(
+    char* path, 
+    std::vector<glm::vec3> & out_vertices, 
+    std::vector<glm::vec2> & out_uvs,
+    std::vector<glm::vec3> & out_normals)
+
     glm::mat4 model;
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
