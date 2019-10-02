@@ -133,7 +133,8 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
 
   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model*/
-  model = glm::scale(glm::vec3(5.0f, 5.0f, 5.0f));
+  angleSelf += dt * M_PI/1000;
+  model = glm::rotate(model, (angleSelf), glm::vec3(0.0, 1.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()
