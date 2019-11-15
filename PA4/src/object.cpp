@@ -63,7 +63,8 @@ Object::Object(char* path, float baseSc, float baseOS, float baseSS)
   }*/
 
   //object loader code taken from https://github.com/opengl-tutorials/ogl/blob/master/tutorial07_model_loading/tutorial07.cpp
-  bool res = loadOBJ(path, vertices, uvs, normals);
+  bool res = loadOBJ(path, Vertices, Indices);
+  std::cout << "Finished loading." << std::endl;
 
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
@@ -86,54 +87,45 @@ Object::Object(char* path, float baseSc, float baseOS, float baseSS)
   maxSpeed = 3.0f;
   minSpeed = 0.25f;
 
-  /*glGenBuffers(1, &VB);
+  glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);*/
-
-  //code for buffers modified from https://github.com/opengl-tutorials/ogl/blob/master/tutorial07_model_loading/tutorial07.cpp
-	glGenBuffers(1, &VB);
-	glBindBuffer(GL_ARRAY_BUFFER, VB);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
-	glGenBuffers(1, &UVB);
-	glBindBuffer(GL_ARRAY_BUFFER, UVB);
-	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 }
 
 Object::~Object()
 {
-  vertices.clear();
-  uvs.clear();
-  normals.clear();
+  Vertices.clear();
+  Indices.clear();
 }
 
 void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
 {
-  /*if(!pausedOrbit)
-  {
-    if(reversedOrbit)
-      angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-    else
-      angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-  }
-  if(!pausedSpin)
-  {
-    if(reversedSpin)
-      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
-    else
-      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
-  }
+  // if(!pausedOrbit)
+  // {
+  //   if(reversedOrbit)
+  //     angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+  //   else
+  //     angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+  // }
+  // if(!pausedSpin)
+  // {
+  //   if(reversedSpin)
+  //     angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
+  //   else
+  //     angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
+  // }
 
-  position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates cube about the designated orbitOrigin
+  /*position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates cube about the designated orbitOrigin
   glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the cube's rotation about its center y-axis
   glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
 
   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model*/
-  model = glm::scale(glm::vec3(5.0f, 5.0f, 5.0f));
+  //angleSelf += dt * M_PI/1000;
+  //model = glm::rotate(model, (angleSelf), glm::vec3(0.0, 1.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()
@@ -148,7 +140,7 @@ glm::mat4 Object::GetPosition()
 
 void Object::Render()
 {
-  /*glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -160,10 +152,10 @@ void Object::Render()
   glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
   glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);*/
+  glDisableVertexAttribArray(1);
 
   //rendering code taken from https://github.com/opengl-tutorials/ogl/blob/master/tutorial07_model_loading/tutorial07.cpp
-  glEnableVertexAttribArray(0);
+  /*glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, VB);
   glVertexAttribPointer(
 			0,                  // attribute
@@ -190,7 +182,7 @@ void Object::Render()
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size() );
 
 		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(1);*/
 }
 
 void Object::SetScale(bool scalar)
@@ -248,13 +240,11 @@ void Object::SetSpinSpeed(bool scalar)
 }
 
 //object loader code taken and modified from 
-bool Object::loadOBJ(char* path, std::vector<glm::vec3> & out_vertices, 
-    std::vector<glm::vec2> & out_uvs, std::vector<glm::vec3> & out_normals)
+bool Object::loadOBJ(char* path, std::vector<Vertex> & out_vertices, std::vector<unsigned int> & out_indices)
 {
-  std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<glm::vec3> temp_vertices; 
-	std::vector<glm::vec2> temp_uvs;
-	std::vector<glm::vec3> temp_normals;
+  //std::vector<unsigned int> vertexIndices;
+	std::vector<Vertex> temp_vertices; 
+	std::vector<unsigned int> temp_indices;
   bool blenderFormat = 1; //if first format works, blenderFormat = 1, else blenderFormat = 0;
 
 	FILE * file = fopen(path, "r");
@@ -278,48 +268,18 @@ bool Object::loadOBJ(char* path, std::vector<glm::vec3> & out_vertices,
 			glm::vec3 vertex;
 			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
 			temp_vertices.push_back(vertex);
-		}else if ( strcmp( lineHeader, "vt" ) == 0 ){
-			glm::vec2 uv;
-			fscanf(file, "%f %f\n", &uv.x, &uv.y );
-			uv.y = -uv.y; // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
-			temp_uvs.push_back(uv);
-		}else if ( strcmp( lineHeader, "vn" ) == 0 ){
-			glm::vec3 normal;
-			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
-			temp_normals.push_back(normal);
 		}else if ( strcmp( lineHeader, "f" ) == 0 ){
-      fpos_t pos; //holds current position
-      fgetpos (file,&pos); //set position to beginning of line
 			std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
-                            &vertexIndex[0], &uvIndex[0], &normalIndex[0],
-                            &vertexIndex[1], &uvIndex[1], &normalIndex[1],
-                            &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
-			if (matches != 9) //if this didn't work, then we need to read a different format
-      {
-        blenderFormat = 0;
-        fsetpos (file,&pos); //return position in file to beginning of the line
-        matches = fscanf(file, "%d %d %d\n", &vertexIndex[0], &vertexIndex[1], &vertexIndex[2]);
-        if(matches !=3) //if this didn't work, something else went wrong
-        {
-          printf("Something went wrong.\n");
-          fclose(file);
-          return false;
-        }
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
+			if (matches != 9){
+				printf("File can't be read by our simple parser :-( Try exporting with other options\n");
+				fclose(file);
+				return false;
 			}
 			vertexIndices.push_back(vertexIndex[0]);
 			vertexIndices.push_back(vertexIndex[1]);
 			vertexIndices.push_back(vertexIndex[2]);
-      if(blenderFormat)
-      {
-        uvIndices    .push_back(uvIndex[0]);
-        uvIndices    .push_back(uvIndex[1]);
-        uvIndices    .push_back(uvIndex[2]);
-        normalIndices.push_back(normalIndex[0]);
-        normalIndices.push_back(normalIndex[1]);
-        normalIndices.push_back(normalIndex[2]);
-      }
 		}else{
 			// Probably a comment, eat up the rest of the line
 			char stupidBuffer[1000];
@@ -333,31 +293,12 @@ bool Object::loadOBJ(char* path, std::vector<glm::vec3> & out_vertices,
 
 		// Get the indices of its attributes
 		unsigned int vertexIndex = vertexIndices[i];
-    unsigned int uvIndex;
-    unsigned int normalIndex;
-    if(blenderFormat)
-    {
-      uvIndex = uvIndices[i];
-      normalIndex = normalIndices[i];
-    }
 		
 		// Get the attributes thanks to the index
 		glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
-    glm::vec2 uv;
-    glm::vec3 normal;
-    if(blenderFormat)
-    {
-      uv = temp_uvs[ uvIndex-1 ];
-      normal = temp_normals[ normalIndex-1 ];
-    }
 		
 		// Put the attributes in buffers
 		out_vertices.push_back(vertex);
-    if(blenderFormat)
-    {
-      out_uvs     .push_back(uv);
-      out_normals .push_back(normal);
-    }
 	
 	}
 	fclose(file);

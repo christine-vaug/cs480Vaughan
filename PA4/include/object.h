@@ -25,22 +25,13 @@ class Object
 
   private:
     //object loader code taken from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
-    bool loadOBJ(
-    char* path, 
-    std::vector<glm::vec3> & out_vertices, 
-    std::vector<glm::vec2> & out_uvs,
-    std::vector<glm::vec3> & out_normals);
-
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec2> uvs;
-    std::vector<glm::vec3> normals;
+    bool loadOBJ(char* path, std::vector<Vertex> & out_vertices, std::vector<unsigned int> & out_indices);
 
     glm::mat4 model;
-    //std::vector<Vertex> Vertices;
-    //std::vector<unsigned int> Indices;
+    std::vector<Vertex> Vertices;
+    std::vector<unsigned int> Indices;
     GLuint VB;
-    GLuint UVB;
-    //GLuint IB;
+    GLuint IB;
 
     float angleOrbit; //the angle of the orbit
     float angleSelf; //the anlgle of the self rotation
